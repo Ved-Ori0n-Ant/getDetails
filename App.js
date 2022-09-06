@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, Button} from 'react-native';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity, Button, Alert} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -34,16 +34,57 @@ function HomeScreen ({navigation}) {
     );
     setIsSet(updatedState);
   };
+  const checkTextInput = () => {
+    if (!isfName.trim()) {
+      Alert.alert('First Name Is Missing!');
+      return false;
+    }
+    else if (!isLName.trim()) {
+      Alert.alert('Last Name Is Missing!');
+      return false;
+    }
+    else if (!isEmail.trim()) {
+      Alert.alert('Email Is Missing!')
+      return false;
+    }
+    else if(isEmail.trim()){
+      if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(isEmail)) {
+        return true;
+      } else {
+        Alert.alert('Enter valid Email');
+        return false;
+      }
+    }
+    else if (!isAge) {
+      Alert.alert('Age Is Missing!');
+      return false;
+    }
+    else{
+      Alert.alert('Your recors have been saved successfully!')
+      return true;
+    }
+  };
+  const validateAndMove = () => {
+    checkTextInput();
+    if(checkTextInput()){
+      navigation.navigate('Details', {
+        FirstName: isfName,
+        LastName: isLName,
+        Email: isEmail,
+        Age: isAge,
+      });
+    }
+  };
   return (
     <View style={styles.container}>
-      <Text style={{fontSize: 36, paddingBottom: 9, color: 'black'}}>
+      <Text style={{fontSize: 35, paddingBottom: 9, color: 'black', textDecorationLine: "underline", fontWeight: "bold"}}>
         Please fill below details!
       </Text>
       <View style={{flex: 0, flexDirection: 'row'}}>
         <TextInput
           style={styles.userInputName}
           placeholder="Enter your first name!"
-          onChangeText={(val) => isSetFName(val)}
+          onChangeText={(val) => isSetFName(val) }
         />
         <TextInput
           style={styles.userInputName}
@@ -74,14 +115,11 @@ function HomeScreen ({navigation}) {
       <TouchableOpacity>
         <Text 
           style = {styles.submitBtn}
-          onPress={() => {
-            navigation.navigate('Details', {
-              FirstName: isfName,
-              LastName: isLName,
-              Email: isEmail,
-              Age: isAge,
-            });
-          }}
+          onPress={() =>
+            {
+              validateAndMove();
+            }
+          }
         >
           Submit
         </Text>
@@ -133,28 +171,32 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "flex-start",
-    backgroundColor: "orange",
+    backgroundColor: "lightgreen",
   },
   userInputName: {
-    backgroundColor: "silver",
+    backgroundColor: "white",
     borderBottomColor: "black",
     borderRightColor: "black",
-    borderRightWidth: 3,
-    borderBottomWidth: 3,
-    borderBottomRightRadius: 33, 
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderBottomRightRadius: 12, 
     margin: 14,
     width: 167,
+    fontSize: 16,
+    color: "black",
   },
   userInput: {
-    backgroundColor: "silver",
-    borderBottomColor: "black",
-    borderRightColor: "black",
-    borderRightWidth: 3,
-    borderBottomWidth: 3,
-    borderBottomRightRadius: 33, 
+    backgroundColor: "white",
+    borderBottomColor: "darkgreen",
+    borderRightColor: "darkgreen",
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderBottomRightRadius: 12, 
     margin: 14,
     width: 360,
     justifyContent: "center",
+    fontSize: 18,
+    color: "black",
   },
   radioButtonContainer: {
     flex: 0,
